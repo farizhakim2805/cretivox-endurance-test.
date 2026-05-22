@@ -106,7 +106,8 @@ export default function Home() {
     setMessage("");
 
     try {
-      const response = await fetch("https://dummyjson.com/user/login", {
+      // PERBAIKAN: Endpoint diganti ke /auth/login
+      const response = await fetch("https://dummyjson.com/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: email, password: password }),
@@ -115,12 +116,14 @@ export default function Home() {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage(` Berhasil Hit API! Token: ${data.token.substring(0, 20)}...`);
+        // PERBAIKAN: Menyesuaikan dengan response terbaru dari DummyJSON (accessToken)
+        const token = data.accessToken || data.token || "";
+        setMessage(`✅ Berhasil Hit API! Token: ${token.substring(0, 20)}...`);
       } else {
-        setMessage(" Gagal: " + (data.message || "Username atau Password salah"));
+        setMessage("❌ Gagal: " + (data.message || "Username atau Password salah"));
       }
     } catch (error: any) {
-      setMessage(` Error Asli: ${error.name} | ${error.message}`);
+      setMessage(`⚠️ Error Asli: ${error.name} | ${error.message}`);
     } finally {
       setLoading(false);
     }
